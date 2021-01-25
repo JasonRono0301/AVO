@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>Action Types</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<style>
+    #container{
+        border: 5px solid black;
+        margin-top: 1.5em;
+        margin-bottom: 1.5em;
+        border-radius: 35px;
+        background-color: white;
+    }
+</style>
+<script>
+  var maxPlayers = 5;
+  var playerFields = {
+    'charactername' : 'Karakternaam',
+    'characterrace' : 'Karakter ras',
+    'characterclass' : 'Karakter class',
+    'playername' : 'Spelernaam',
+  };
+  function nl2br (str) {
+    var breakTag = '<br />';
+    var replaceStr = '$1'+ breakTag +'$2';
+    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, replaceStr);
+  }
+
+  function getPlayerInfo(index){
+    var result = ''; 
+    var cname = document.getElementById('charactername' + index).value;
+    var crace = document.getElementById('characterrace' + index).value;
+    var cclass = document.getElementById('characterclass' + index).value;
+    var player = document.getElementById('playername' + index).value;
+    
+    if(cname.length == 0 || crace.length == 0 || cclass.length == 0 || player.length == 0){
+      return '';
+    }
+
+    return '<b>'+cname+ '</b> de '+crace+ ' ' + cclass + ' <small>(gespeeld door '+player+')</small>';
+
+  }
+var states = [
+'Agarudian Empire', 
+'Kingdom of Bedria', 'Bitterguard', 'Bronhelm',
+'The Colcipian Federation of Islands',
+'Lytria', 'Mivergia Lowlands',
+'Owlreach', 'Pitria', 'Shathar', 'Shatho',
+'The Forsaken Wastes', 'Uggodh', 'Vellendor',
+'Wellatan', 'Yulfond', 'Zeirru'];
+
+ </script>
+</head>
+<body>
+<div class="container" id="container">
+  <div class="row mt-4">
+        
+    <div class="col-12 mb-3">
+      <h1 class="mb-0" id="title"></h1>
+      </div>
+  </div>
+  <div id="result" class="row mt-4" style="display: none;">
+
+    <div class="col-12 mb-3">
+      <h2>Groepsleden</h2>
+      <div id="players">
+
+      </div>
+    </div>
+
+    <div class="col-12 mb-3">
+      <h3>Wij zijn bij elkaar gekomen of hebben jullie elkaar zo ontmoet</h3>
+      <div id="groupMeet">
+
+      </div>
+    </div>
+
+    <div class="col-12 mb-3">
+      <h3 id="whereTitle"></h3>
+      <div id="whereBecause">
+
+      </div>
+    </div>
+
+    <div id="" class="col-12 mb-3">
+      <a href="#" id="returnToEdit">Edit</a>
+    </div>
+  </div>
+
+
+    <div id="formfields" class="row mt-4">
+        <div id="formfields" class="col-12 mb-3">
+            <form>
+                <div class="form-group">
+                  <label for="groupname">Wat is de naam van jullie groep?</label>
+                  <input type="text" class="form-control" id="groupname" aria-describedby="groupHelp">
+                  <small class="form-text text-muted"><b>Tip</b>: <a href="https://www.chaosgen.com/fantasy/party-name" target="_blank">Party name generator</a></small>
+                </div>
+
+                <label for="groupname">Wie zitten er in deze groep?</label>
+                <div id="groupContent">
+
+                </div>
+                <small class="form-text text-muted">Minimaal 3 en maximaal 5.</small>
+
+                <div class="form-group mt-3">
+                  <label for="met">Hoe zijn jullie bij elkaar gekomen of hebben jullie elkaar ontmoet?</label>
+                  <textarea class="form-control" id="met" rows="3"></textarea>
+                  <small class="form-text text-muted"><b>Tip</b>: <a href="https://rpg.stackexchange.com/questions/10195/how-to-create-a-good-backstory-for-how-the-party-got-together" target="_blank">Party backstory sugesstions</a>.</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="state">Waar zijn jullie nu?</label>
+                  <select class="form-control" name="state" id="state">
+
+                  </select>
+                  <small class="form-text text-muted">Maak een keuze.</small>
+                
+                </div>
+
+                <div class="form-group">
+                  <label for="town">Hoe heet de stad, dorp, vestiging of plek waar jullie nu zijn?</label>
+                  <input type="text" class="form-control" id="town">
+                  <small class="form-text text-muted">Het mag de hoofdstad zijn of iets dat je zelf hebt verzonnen.</small>
+                </div>
+
+                <div class="form-group mt-3">
+                  <label for="reason">Wat is de rede dat jullie daar nu zijn?</label>
+                  <textarea class="form-control" id="reason" rows="3"></textarea>
+                  <small class="form-text text-muted"><b>Tip</b>: <a href="https://rpg.stackexchange.com/questions/10195/how-to-create-a-good-backstory-for-how-the-party-got-together" target="_blank">Party backstory suggestions</a>.</small>
+                </div>
+
+                <button id="print" class="btn btn-primary">Print vriendelijk</button>
+              </form>
+        </div>
+    </div>
+</div>
+<script>
+  
+  var select = document.getElementById('state');
+  var title = document.getElementById('title');
+  var groupContentHolder = document.getElementById('groupContent');
+
+var reset = function (){
+    title.innerHTML = 'Stel de groep samen';
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('formfields').style.display = 'block';
+  };
+
+  reset();
+
+
+  for (let index = 1; index <= maxPlayers; index++) {
+    var parentDiv = document.createElement('div');
+    parentDiv.classList.add('mb-1');
+    parentDiv.classList.add('form-row');
+
+    for (const property in playerFields) {
+      var childDiv = document.createElement('div');
+      childDiv.classList.add('col');
+
+      var inputElement = document.createElement('input');
+      inputElement.classList.add('form-control');
+      inputElement.setAttribute('type', 'text');
+      inputElement.setAttribute('name', property+index);
+      inputElement.setAttribute('id', property+index);
+      inputElement.setAttribute('placeholder', playerFields[property]+' '+index);
+
+      childDiv.appendChild(inputElement);
+      parentDiv.appendChild(childDiv);
+    }
+    groupContentHolder.appendChild(parentDiv);
+  }
+
+  states.forEach(name => {
+    var option = new Option();
+    option.innerHTML = name;
+    option.value = name;
+
+    select.appendChild(option);
+  });
+
+  document.getElementById('print').onclick = function(e){
+    e.preventDefault();
+
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('formfields').style.display = 'none';
+
+    title.innerHTML = document.getElementById('groupname').value;
+
+    var players = '';
+    for (let index = 1; index <= maxPlayers; index++) {
+      var player  = getPlayerInfo(index);
+
+      if (player.length > 0){
+        players += player+'<br/>';
+      }
+
+      document.getElementById('players').innerHTML = players;
+    }
+
+    document.getElementById('groupMeet').innerHTML = nl2br(document.getElementById('met').value);
+    document.getElementById('whereTitle').innerHTML = 'Momenteel zijn we in '+document.getElementById('town').value+' (in '+document.getElementById('state').value+ ') omdat';
+    document.getElementById('whereBecause').innerHTML = nl2br(document.getElementById('reason').value);
+  };
+
+  document.getElementById('returnToEdit').onclick = reset;
+</script>
+</body>
+</html>
